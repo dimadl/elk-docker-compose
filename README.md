@@ -12,6 +12,8 @@ Simple to run Docker Compose setup for everyone who wants to get familiar with b
 
 1. Open CLI
 2. Go to the project folder
-2. Run the following command:
+3. Run the following command:
 > docker-compose -f docker-compose.yml up -d
-
+4. Check service availability
+- Kibana: http://localhost:5601
+- Elasticsearch HTTP: http://localhost:9200
