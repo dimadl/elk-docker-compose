@@ -1,0 +1,41 @@
+version: "3.2"
+services:
+  elasticsearch:
+    image: elasticsearch:7.6.0
+    ports:
+      - 9200:9200
+    volumes:
+      - ./elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+    networks:
+      main:
+        aliases: 
+          - elasticsearch
+  kibana:
+    image: kibana:7.6.0
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME:-elastic}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
+    networks:
+      main: null
+    depends_on:
+      - elasticsearch
+      - logstash
+
+  logstash:
+    image: logstash:7.6.0
+    ports:
+      - "12201:12201/udp"
+    volumes: 
+      - ./logstash/pipelines:/usr/share/logstash/pipeline/:consistent
+      - ./logstash/tmp:/usr/share/logstash/tmp/:consistent
+    networks:
+      main: null
+    depends_on:
+      - elasticsearch
+networks:
+    main: null
